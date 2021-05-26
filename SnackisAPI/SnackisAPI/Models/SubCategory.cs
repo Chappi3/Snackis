@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace SnackisAPI.Models
 {
-    public class Category
+    public class SubCategory
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<SubCategory> SubCategories { get; set; }
+        public List<Post> Posts { get; set; }
     }
 }
