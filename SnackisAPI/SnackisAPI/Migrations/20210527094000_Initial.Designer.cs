@@ -10,7 +10,7 @@ using SnackisAPI.Data;
 namespace SnackisAPI.Migrations
 {
     [DbContext(typeof(SnackisContext))]
-    [Migration("20210527081843_Initial")]
+    [Migration("20210527094000_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,7 +49,7 @@ namespace SnackisAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("PostId")
+                    b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -96,11 +96,16 @@ namespace SnackisAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("SubCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubCategoryId");
 
                     b.ToTable("Posts");
                 });
@@ -152,25 +157,28 @@ namespace SnackisAPI.Migrations
             modelBuilder.Entity("SnackisAPI.Models.Comment", b =>
                 {
                     b.HasOne("SnackisAPI.Models.Post", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SnackisAPI.Models.SubCategory", b =>
-                {
-                    b.HasOne("SnackisAPI.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("SnackisAPI.Models.Post", b =>
                 {
-                    b.Navigation("Comments");
+                    b.HasOne("SnackisAPI.Models.SubCategory", null)
+                        .WithMany()
+                        .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SnackisAPI.Models.SubCategory", b =>
+                {
+                    b.HasOne("SnackisAPI.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
