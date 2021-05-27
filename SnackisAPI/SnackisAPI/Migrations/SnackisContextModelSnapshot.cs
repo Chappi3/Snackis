@@ -94,16 +94,11 @@ namespace SnackisAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("SubCategoryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SubCategoryId");
 
                     b.ToTable("Posts");
                 });
@@ -138,7 +133,7 @@ namespace SnackisAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CategoryId")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -160,35 +155,20 @@ namespace SnackisAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SnackisAPI.Models.Post", b =>
-                {
-                    b.HasOne("SnackisAPI.Models.SubCategory", null)
-                        .WithMany("Posts")
-                        .HasForeignKey("SubCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("SnackisAPI.Models.SubCategory", b =>
                 {
-                    b.HasOne("SnackisAPI.Models.Category", null)
-                        .WithMany("SubCategories")
+                    b.HasOne("SnackisAPI.Models.Category", "Category")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("SnackisAPI.Models.Category", b =>
-                {
-                    b.Navigation("SubCategories");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("SnackisAPI.Models.Post", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("SnackisAPI.Models.SubCategory", b =>
-                {
-                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

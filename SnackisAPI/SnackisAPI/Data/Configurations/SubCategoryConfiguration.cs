@@ -9,8 +9,6 @@ namespace SnackisAPI.Data.Configurations
         public void Configure(EntityTypeBuilder<SubCategory> builder)
         {
             builder.Property(s => s.Name).IsRequired();
-
-            builder.HasMany(s => s.Posts).WithOne().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

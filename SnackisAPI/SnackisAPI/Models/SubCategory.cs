@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SnackisAPI.Models
 {
@@ -7,6 +7,8 @@ namespace SnackisAPI.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<Post> Posts { get; set; }
+        [JsonIgnore]
+        public Guid CategoryId { get; set; }
+        public virtual Category Category { get; set; }
     }
 }
