@@ -2,9 +2,9 @@ name: Build SnackisAPI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ SnackisAPI ]
   pull_request:
-    branches: [ main ]
+    branches: [ SnackisAPI ]
 
 jobs:
   build:
