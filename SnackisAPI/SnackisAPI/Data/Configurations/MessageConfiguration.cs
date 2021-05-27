@@ -9,6 +9,8 @@ namespace SnackisAPI.Data.Configurations
         public void Configure(EntityTypeBuilder<Message> builder)
         {
             builder.Property(m => m.Content).IsRequired();
+            builder.Property(m => m.FromUser).IsRequired();
+            builder.Property(m => m.ToUser).IsRequired();
         }
     }
 }
