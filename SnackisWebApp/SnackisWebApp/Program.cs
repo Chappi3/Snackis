@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SnackisWebApp.Areas.Identity.Data;
+using SnackisWebApp.Models;
+using System;
+using System.Threading.Tasks;
+using SnackisWebApp.Enums;
 
 namespace SnackisWebApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 
@@ -25,9 +25,37 @@ namespace SnackisWebApp
                 try
                 {
                     var context = services.GetRequiredService<SnackisUserContext>();
-                    context.Database.Migrate();
+                    await context.Database.MigrateAsync();
 
-                    // Todo: check for admin and roles and create them if they doen't exist.
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var userRoleExists = await roleManager.RoleExistsAsync(Roles.User.ToString());
+                    var adminRoleExists = await roleManager.RoleExistsAsync(Roles.Admin.ToString());
+
+                    if (!userRoleExists)
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
+                    }
+                    if (!adminRoleExists)
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
+                    }
+
+                    var userManager = services.GetRequiredService<UserManager<SnackisUser>>();
+                    var adminUser = await userManager.FindByNameAsync("Admin");
+
+                    if (adminUser == null)
+                    {
+                        var admin = new SnackisUser
+                        {
+                            Email = "Admin@mail.com",
+                            UserName = "Admin",
+                            EmailConfirmed = true
+                        };
+
+                        await userManager.CreateAsync(admin, "AdminPassword1!");
+                        await userManager.AddToRoleAsync(admin, Roles.Admin.ToString());
+                    }
+
                 }
                 catch (Exception e)
                 {
