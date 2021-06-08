@@ -1,0 +1,41 @@
+﻿@page
+@model SnackisWebApp.Pages.Admin.Management.SubCategoryManagerModel
+@{
+    ViewData["Title"] = "Sub Category Manager";
+}
+
+<h1>Sub Category Manager</h1>
+<form method="post" asp-page-handler="AddSubCategory">
+    <div class="input-group">
+        <input type="hidden" asp-for="Input.CategoryId" value="@Model.Category.Id"/>
+        <input asp-for="Input.Name" class="form-control w-25">
+        <span class="input-group-btn">
+            <button class="btn btn-info">Add New Sub Category</button>
+        </span>
+    </div>
+</form>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var subCategory in Model.SubCategories.Where(s => s.CategoryId == Model.Category.Id).OrderBy(s => s.Name))
+    {
+        <tr>
+            <td>@subCategory.Id</td>
+            <td>@subCategory.Name</td>
+            <td>
+                <form method="post" asp-page-handler="DeleteSubCategory">
+                    <input type="hidden" asp-for="Category.Id" value="@Model.Category.Id"/>
+                    <input type="hidden" asp-for="SubCategoryId" value="@subCategory.Id"/>
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
