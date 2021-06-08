@@ -1,11 +1,11 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SnackisWebApp.Gateways;
 using SnackisWebApp.Models;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SnackisWebApp.Pages.Admin.Management
 {
@@ -37,6 +37,7 @@ namespace SnackisWebApp.Pages.Admin.Management
         public async Task<IActionResult> OnGetAsync()
         {
             Categories = await _categoryGateway.GetAllCategories();
+            
             return Page();
         }
 
