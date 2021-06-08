@@ -41,6 +41,13 @@ namespace SnackisAPI.Controllers
             return post;
         }
 
+        // GET: api/Posts/SubcategoryId/123
+        [HttpGet("subcategoryId/{subcategoryId}")]
+        public async Task<ActionResult<IEnumerable<Post>>> GetPostsBySubcategoryId(Guid subcategoryId)
+        {
+            return await _context.Posts.Where(p => p.SubCategoryId == subcategoryId).ToListAsync();
+        }
+
         // PUT: api/Posts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
