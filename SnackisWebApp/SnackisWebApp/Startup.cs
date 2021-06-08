@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,18 +7,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SnackisWebApp.Areas.Identity.Data;
+using SnackisWebApp.Gateways;
 using SnackisWebApp.Models;
 
 namespace SnackisWebApp
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -60,7 +62,23 @@ namespace SnackisWebApp
 
             services.AddRazorPages(options =>
             {
-                options.Conventions.AuthorizeFolder("/Admin", "RequireAdminRole");
+                /*options.Conventions.AuthorizeFolder("/Admin", "RequireAdminRole");*/
+            });
+
+            var baseAddress = new Uri(Configuration["BaseApiUrl"]);
+            services.AddHttpClient<CategoryGateway>(options =>
+            {
+                options.BaseAddress = baseAddress;
+            });
+
+            services.AddHttpClient<SubCategoryGateway>(options =>
+            {
+                options.BaseAddress = baseAddress;
+            });
+
+            services.AddHttpClient<PostGateway>(options =>
+            {
+                options.BaseAddress = baseAddress;
             });
         }
 

@@ -7,4 +7,16 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="row">
+        <div class="col-6">
+            @foreach (var category in Model.Categories)
+            {
+                <h3>@category.Name</h3>
+                @foreach (var subCategory in Model.SubCategories.Where(s => s.CategoryId == category.Id))
+                {
+                    <a class="page-link" asp-page="SubCategory" asp-route-subCategoryId="@subCategory.Id"><h5> - @subCategory.Name</h5></a>
+                }
+            }
+        </div>
+    </div>
 </div>

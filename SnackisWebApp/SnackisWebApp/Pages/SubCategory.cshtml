@@ -1,0 +1,41 @@
+﻿@page
+@model SnackisWebApp.Pages.SubCategoryModel
+@{
+    ViewData["Title"] = "Subcategory";
+}
+
+<h1>Subcategory</h1>
+<form method="post" asp-page-handler="AddPost">
+    <div class="input-group">
+        <input type="hidden" asp-for="Input.SubCategoryId" value="@Model.SubCategory.Id" />
+        <input asp-for="Input.Name" class="form-control w-25">
+        <span class="input-group-btn">
+            <button class="btn btn-info">Add New Post</button>
+        </span>
+    </div>
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var post in Model.Posts.Where(p => p.SubCategoryId == Model.SubCategory.Id).OrderBy(p => p.CreatedAt))
+        {
+            <tr>
+                <td>@post.Id</td>
+                <td>@post.Title</td>
+                <td>
+                    <form method="post" asp-page-handler="DeletePost">
+                        <input type="hidden" asp-for="SubCategory.Id" value="@Model.SubCategory.Id" />
+                        <input type="hidden" asp-for="PostId" value="@post.Id" />
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
