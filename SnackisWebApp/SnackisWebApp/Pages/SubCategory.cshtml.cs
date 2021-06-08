@@ -1,20 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SnackisWebApp.Gateways;
 using SnackisWebApp.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace SnackisWebApp.Pages
 {
     public class SubCategoryModel : PageModel
     {
+        public UserManager<SnackisUser> UserManager { get; }
         private readonly PostGateway _postGateway;
         private readonly SubCategoryGateway _subCategoryGateway;
-        private readonly UserManager<SnackisUser> _userManager;
 
         public string PostId { get; set; }
         public string UserId { get; set; }
@@ -38,16 +38,16 @@ namespace SnackisWebApp.Pages
 
         public SubCategoryModel(PostGateway postGateway, SubCategoryGateway subCategoryGateway, UserManager<SnackisUser> userManager)
         {
+            UserManager = userManager;
             _postGateway = postGateway;
             _subCategoryGateway = subCategoryGateway;
-            _userManager = userManager;
         }
 
         public async Task<IActionResult> OnGetAsync(string subcategoryId)
         {
             Posts = await _postGateway.GetAllPostsBySubcategoryId(subcategoryId);
             SubCategory = await _subCategoryGateway.GetSubcategoryById(subcategoryId);
-            UserId = _userManager.GetUserId(User);
+            UserId = UserManager.GetUserId(User);
 
             if (SubCategory == null)
             {
@@ -63,12 +63,12 @@ namespace SnackisWebApp.Pages
             {
                 var result = await _postGateway.CreatePost(Input.Title, Input.Content, Input.UserId, Input.SubCategoryId);
 
-                if (result)
+                if (result != null)
                 {
-                    return RedirectToPage();
+                    return RedirectToPage(new { subcategoryId = result.SubCategoryId });
                 }
             }
-            return Page();
+            return BadRequest();
         }
 
         public async Task<IActionResult> OnPostDeletePost()

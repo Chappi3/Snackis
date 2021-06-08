@@ -51,8 +51,7 @@ namespace SnackisWebApp.Pages.Admin.Management
                 var manageUserWithRoles = new ManageUserWithRoles
                 {
                     RoleId = role.Id,
-                    RoleName = role.Name,
-                    Selected = false
+                    RoleName = role.Name
                 };
 
                 if (await _userManager.IsInRoleAsync(user, role.Name))
