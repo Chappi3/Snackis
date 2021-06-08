@@ -23,15 +23,15 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var post in Model.Posts.Where(p => p.subCategoryId == Model.SubCategory.Id).OrderBy(p => p.Name))
+        @foreach (var post in Model.Posts.Where(p => p.SubCategoryId == Model.SubCategory.Id).OrderBy(p => p.CreatedAt))
         {
             <tr>
                 <td>@post.Id</td>
-                <td>@post.Name</td>
+                <td>@post.Title</td>
                 <td>
                     <form method="post" asp-page-handler="DeletePost">
-                        <input type="hidden" asp-for="post.Id" value="@Model.post.Id" />
-                        <input type="hidden" asp-for="SubCategoryId" value="@subCategory.Id" />
+                        <input type="hidden" asp-for="SubCategory.Id" value="@Model.SubCategory.Id" />
+                        <input type="hidden" asp-for="PostId" value="@post.Id" />
                         <button class="btn btn-danger">Delete</button>
                     </form>
                 </td>
