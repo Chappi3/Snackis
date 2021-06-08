@@ -55,6 +55,8 @@ namespace SnackisWebApp
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
+            // Todo: Add Cookie
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdminRole", p => p.RequireRole("Admin"));
@@ -62,7 +64,7 @@ namespace SnackisWebApp
 
             services.AddRazorPages(options =>
             {
-                /*options.Conventions.AuthorizeFolder("/Admin", "RequireAdminRole");*/
+                options.Conventions.AuthorizeFolder("/Admin", "RequireAdminRole");
             });
 
             var baseAddress = new Uri(Configuration["BaseApiUrl"]);
