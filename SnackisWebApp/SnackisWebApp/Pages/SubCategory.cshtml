@@ -1,28 +1,36 @@
 ﻿@page
 @model SnackisWebApp.Pages.SubCategoryModel
 @{
-    ViewData["Title"] = "Subcategory";
+    ViewData["Title"] = Model.SubCategory.Name;
 }
 
-<h1>Subcategory</h1>
+<h1>@Model.SubCategory.Name</h1>
 <form method="post" asp-page-handler="AddPost">
     <div class="input-group">
         <input type="hidden" asp-for="Input.SubCategoryId" value="@Model.SubCategory.Id" />
-        <input asp-for="Input.Name" class="form-control w-25">
+        <input asp-for="Input.Title" class="form-control w-25">
+        <textarea asp-for="Input.Content" class="form-control w-25"></textarea>
         <span class="input-group-btn">
             <button class="btn btn-info">Add New Post</button>
         </span>
     </div>
 </form>
-<table class="table table-striped">
-    <thead>
+
+@if (Model.Posts.Count == 0)
+{
+    <h3>Oh such empty!</h3>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
         <tr>
             <th>Id</th>
             <th>Name</th>
             <th>Action</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         @foreach (var post in Model.Posts.Where(p => p.SubCategoryId == Model.SubCategory.Id).OrderBy(p => p.CreatedAt))
         {
             <tr>
@@ -37,5 +45,6 @@
                 </td>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
