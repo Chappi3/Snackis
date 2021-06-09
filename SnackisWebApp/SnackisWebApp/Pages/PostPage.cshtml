@@ -1,0 +1,36 @@
+﻿@page
+@model SnackisWebApp.Pages.PostPageModel
+@{
+    ViewData["Title"] = @Model.Post.Title;
+}
+
+<div class="row text-center">
+    <div class="col-4 align-content-center">
+        <p>@Model.Post.CreatedAt</p>
+        <a asp-page="UserProfile" asp-route-userId="@Model.CreatedByUser.Id">
+            <p>@Model.CreatedByUser.UserName</p>
+        </a>
+        <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.CreatedByUser.ProfileImg))">
+    </div>
+    <div class="col-8 align-content-center">
+        <h3>@Model.Post.Title</h3>
+        <textarea class="rounded w-100 h-75" readonly>@Model.Post.Content</textarea>
+    </div>
+</div>
+
+@foreach (var comment in Model.Comments.OrderBy(c => c.CreatedAt))
+{
+    <div class="row text-center">
+        <div class="col-4 align-content-center">
+            <p>@Model.Post.CreatedAt</p>
+            <a asp-page="UserProfile" asp-route-userId="@Model.CreatedByUser.Id">
+                <p>@Model.CreatedByUser.UserName</p>
+            </a>
+            <img id="profilePicture" style="width:200px;height:200px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.CreatedByUser.ProfileImg))">
+        </div>
+        <div class="col-8 align-content-center">
+            <h3>@Model.Post.Title</h3>
+            <textarea class="rounded w-100 h-75" readonly>@Model.Post.Content</textarea>
+        </div>
+    </div>
+}

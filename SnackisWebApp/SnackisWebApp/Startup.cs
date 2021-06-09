@@ -71,6 +71,7 @@ namespace SnackisWebApp
             services.AddHttpClient<CategoryGateway>(options =>
             {
                 options.BaseAddress = baseAddress;
+                /*options.BaseAddress = new Uri(Configuration["BaseApiUrl"] + "/Categories");*/
             });
 
             services.AddHttpClient<SubCategoryGateway>(options =>
@@ -79,6 +80,11 @@ namespace SnackisWebApp
             });
 
             services.AddHttpClient<PostGateway>(options =>
+            {
+                options.BaseAddress = baseAddress;
+            });
+
+            services.AddHttpClient<CommentGateway>(options =>
             {
                 options.BaseAddress = baseAddress;
             });
