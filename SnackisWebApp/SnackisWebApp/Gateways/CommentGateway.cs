@@ -19,5 +19,11 @@ namespace SnackisWebApp.Gateways
         {
             return await _httpClient.GetFromJsonAsync<List<Comment>>(_httpClient.BaseAddress + "/Comments/PostId/" + postId);
         }
+
+        public async Task<bool> CreateComment(string content, string postId, string userId)
+        {
+            var response = await _httpClient.PostAsJsonAsync(_httpClient.BaseAddress + "/Comments", new {content, userId, postId});
+            return response.IsSuccessStatusCode;
+        }
     }
 }
