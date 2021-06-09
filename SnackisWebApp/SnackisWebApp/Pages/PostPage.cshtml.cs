@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,11 @@ namespace SnackisWebApp.Pages
     public class PostPageModel : PageModel
     {
         private readonly PostGateway _postGateway;
-        private readonly UserManager<SnackisUser> _userManager;
         private readonly CommentGateway _commentGateway;
+        private readonly UserManager<SnackisUser> _userManager;
 
         public Post Post { get; set; }
+        public string UserId { get; set; }
         public SnackisUser CreatedByUser { get; set; }
 
         public List<CustomCommentModel> Comments { get; set; }
@@ -28,11 +30,25 @@ namespace SnackisWebApp.Pages
             public SnackisUser CreatedByUser { get; set; }
         }
 
+        [BindProperty]
+        public InputModel Input { get; set; }
+
+        public class InputModel
+        {
+            [Required]
+            public string Content { get; set; }
+            [Required]
+            public string PostId { get; set; }
+            [Required]
+            public string UserId { get; set; }
+        }
+
         public PostPageModel(PostGateway postGateway, UserManager<SnackisUser> userManager, CommentGateway commentGateway)
         {
             _postGateway = postGateway;
             _userManager = userManager;
             _commentGateway = commentGateway;
+            Comments = new List<CustomCommentModel>();
         }
 
         public async Task<IActionResult> OnGetAsync(string postId)
@@ -43,6 +59,7 @@ namespace SnackisWebApp.Pages
                 return NotFound();
             }
 
+            UserId = _userManager.GetUserId(User);
             CreatedByUser = await _userManager.FindByIdAsync(Post.UserId);
             var comments = await _commentGateway.GetCommentByPostId(postId);
 
@@ -59,6 +76,21 @@ namespace SnackisWebApp.Pages
             }
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAddComment()
+        {
+            if (ModelState.IsValid)
+            {
+                var status = await _commentGateway.CreateComment(Input.Content, Input.PostId, Input.UserId);
+
+                if (status)
+                {
+                    return RedirectToPage(new{ postId = Input.PostId });
+                }
+            }
+
+            return BadRequest();
         }
     }
 }
