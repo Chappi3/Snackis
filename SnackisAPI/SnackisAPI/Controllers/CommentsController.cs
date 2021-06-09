@@ -41,6 +41,13 @@ namespace SnackisAPI.Controllers
             return comment;
         }
 
+        // GET: api/Comments/PostId/12345
+        [HttpGet("PostId/{postId}")]
+        public async Task<ActionResult<IEnumerable<Comment>>> GetCommentsByPostId(Guid postId)
+        {
+            return await _context.Comments.Where(c => c.PostId == postId).ToListAsync();
+        }
+
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
