@@ -20,10 +20,15 @@ namespace SnackisWebApp.Gateways
             return await _httpClient.GetFromJsonAsync<List<Post>>(_httpClient.BaseAddress + "/Posts/subcategoryId/" + subcategoryId);
         }
 
-        public async Task<bool> CreatePost(string title, string content, string userId, string subcategoryId)
+        public async Task<Post> CreatePost(string title, string content, string userId, string subcategoryId)
         {
-            var response = await _httpClient.PostAsJsonAsync(_httpClient.BaseAddress + "/posts", new {Title = title, Content = content, SubCategoryId = subcategoryId, UserId = userId});
-            return response.IsSuccessStatusCode;
+            var response = await _httpClient.PostAsJsonAsync(_httpClient.BaseAddress + "/Posts", new {title, content, userId, subcategoryId});
+            return await response.Content.ReadFromJsonAsync<Post>();
+        }
+
+        public async Task<Post> GetPostById(string postId)
+        {
+            return await _httpClient.GetFromJsonAsync<Post>(_httpClient.BaseAddress + "/Posts/" + postId);
         }
     }
 }
