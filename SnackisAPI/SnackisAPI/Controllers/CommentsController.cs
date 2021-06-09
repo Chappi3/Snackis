@@ -84,6 +84,7 @@ namespace SnackisAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
+            comment.CreatedAt = DateTime.Now;
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
