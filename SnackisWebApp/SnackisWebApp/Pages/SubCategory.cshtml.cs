@@ -12,13 +12,12 @@ namespace SnackisWebApp.Pages
 {
     public class SubCategoryModel : PageModel
     {
-        public UserManager<SnackisUser> UserManager { get; }
         private readonly PostGateway _postGateway;
         private readonly SubCategoryGateway _subCategoryGateway;
+        private readonly UserManager<SnackisUser> _userManager;
 
         public string PostId { get; set; }
         public string UserId { get; set; }
-        public List<Post> Posts { get; set; }
         public SubCategory SubCategory { get; set; }
 
         [BindProperty]
@@ -36,22 +35,45 @@ namespace SnackisWebApp.Pages
             public string UserId { get; set; }
         }
 
+        public List<CustomPostModel> Posts { get; set; }
+
+        public class CustomPostModel
+        {
+            public string Id { get; set; }
+            public string Title { get; set; }
+            public DateTime CreatedAt { get; set; }
+            public SnackisUser CreatedByUser { get; set; }
+        }
+
         public SubCategoryModel(PostGateway postGateway, SubCategoryGateway subCategoryGateway, UserManager<SnackisUser> userManager)
         {
-            UserManager = userManager;
             _postGateway = postGateway;
             _subCategoryGateway = subCategoryGateway;
+            _userManager = userManager;
+            Posts = new List<CustomPostModel>();
         }
 
         public async Task<IActionResult> OnGetAsync(string subcategoryId)
         {
-            Posts = await _postGateway.GetAllPostsBySubcategoryId(subcategoryId);
+            var posts = await _postGateway.GetAllPostsBySubcategoryId(subcategoryId);
             SubCategory = await _subCategoryGateway.GetSubcategoryById(subcategoryId);
-            UserId = UserManager.GetUserId(User);
+            UserId = _userManager.GetUserId(User);
 
             if (SubCategory == null)
             {
                 return NotFound();
+            }
+
+            foreach (var post in posts)
+            {
+                var customPostModel = new CustomPostModel
+                {
+                    Id = post.Id,
+                    CreatedByUser = await _userManager.FindByIdAsync(post.UserId),
+                    Title = post.Title,
+                    CreatedAt = post.CreatedAt
+                };
+                Posts.Add(customPostModel);
             }
 
             return Page();

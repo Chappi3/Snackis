@@ -1,19 +1,7 @@
 ﻿@page
-@using Microsoft.IdentityModel.Tokens
 @model SnackisWebApp.Pages.SubCategoryModel
 @{
     ViewData["Title"] = Model.SubCategory.Name;
-
-    @functions{
-
-        private async Task<string> GetUser(string userId)
-        {
-            var user = await Model.UserManager.FindByIdAsync(userId);
-            return user.UserName;
-        }
-
-    }
-
 }
 
 <h1>@Model.SubCategory.Name</h1>
@@ -50,24 +38,37 @@ else
 }
 else
 {
-    <table class="table table-striped">
-        <tbody>
-            @foreach (var post in Model.Posts.Where(p => p.SubCategoryId == Model.SubCategory.Id).OrderBy(p => p.CreatedAt))
-            {
-                <tr>
-                    <td>@post.CreatedAt</td>
-                    <td>@post.Title</td>
-                    <td>@post.Content</td>
-                    <td>@GetUser(post.UserId)</td>
-                    <td>
-                        <form method="post" asp-page-handler="DeletePost">
-                            <input type="hidden" asp-for="SubCategory.Id" value="@Model.SubCategory.Id" />
-                            <input type="hidden" asp-for="PostId" value="@post.Id" />
-                            <button class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @foreach (var post in Model.Posts.OrderBy(p => p.CreatedAt))
+    {
+
+        <div class="row text-center">
+
+            <div class="col-10 border border-dark bg-light my-1">
+                <div class="row my-2">
+                    <div class="col-4 align-content-center">
+                        <p>Created by: @post.CreatedByUser.UserName</p>
+                        <p>@post.CreatedAt</p>
+                    </div>
+
+                    <div class="col-6 align-content-center">
+                        <a class="text-center" asp-page="PostPage" asp-route-postId="@post.Id">
+                            <h5>@post.Title</h5>
+                        </a>
+                    </div>
+                    <div class="col-2 align-content-center">
+                        @if (Model.UserId == post.CreatedByUser.Id || Model.User.IsInRole("Admin"))
+                        {
+                            <form method="post" asp-page-handler="DeletePost">
+                                <input type="hidden" asp-for="SubCategory.Id" value="@Model.SubCategory.Id" />
+                                <input type="hidden" asp-for="PostId" value="@post.Id" />
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    }
 }
