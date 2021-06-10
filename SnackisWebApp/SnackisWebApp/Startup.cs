@@ -88,6 +88,11 @@ namespace SnackisWebApp
             {
                 options.BaseAddress = baseAddress;
             });
+
+            services.AddHttpClient<ReportGateway>(options =>
+            {
+                options.BaseAddress = baseAddress;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
