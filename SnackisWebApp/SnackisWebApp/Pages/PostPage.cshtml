@@ -16,6 +16,9 @@
         <h3>@Model.Post.Title</h3>
         <textarea class="rounded w-100 h-75" readonly>@Model.Post.Content</textarea>
     </div>
+    <div>
+        <a class="btn btn-warning" asp-page="CreateReport" asp-route-PostId="@Model.Post.Id">Report</a>
+    </div>
 </div>
 
 @foreach (var comment in Model.Comments.OrderBy(c => c.CreatedAt))
@@ -31,6 +34,9 @@
         </div>
         <div class="col-8 align-content-center">
             <textarea class="rounded w-100 h-75" readonly>@comment.Content</textarea>
+        </div>
+        <div>
+            <a class="btn btn-warning" asp-page="CreateReport" asp-route-CommentId="@comment.Id">Report</a>
         </div>
     </div>
 }
