@@ -1,0 +1,17 @@
+﻿@page
+@model SnackisWebApp.Pages.Admin.Reports.ManageReportModel
+@{
+}
+
+<h1>Managing report @Model.Report.Id created at @Model.Report.CreatedAt</h1>
+@if (Model.Report.PostId != null)
+{
+    <p>@Model.Report.PostId</p>
+    <p>@Model.Report.Content</p>
+}
+else if (Model.Report.CommentId != null)
+{
+    <p>@Model.Report.CommentId</p>
+    <p>@Model.Report.Content</p>
+}
+

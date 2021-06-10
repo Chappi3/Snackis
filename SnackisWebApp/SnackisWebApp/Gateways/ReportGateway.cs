@@ -30,5 +30,11 @@ namespace SnackisWebApp.Gateways
         {
             return await _httpClient.GetFromJsonAsync<Report>(_httpClient.BaseAddress + "/Reports/" + reportId);
         }
+
+        public async Task<bool> DeleteReport(string reportId)
+        {
+            var response = await _httpClient.DeleteAsync(_httpClient.BaseAddress + "/Reports/" + reportId);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

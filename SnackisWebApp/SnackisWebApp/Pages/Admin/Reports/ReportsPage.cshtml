@@ -1,0 +1,29 @@
+﻿@page
+@model SnackisWebApp.Pages.Admin.Reports.ReportsPageModel
+@{
+}
+
+<h1>Reports</h1>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Created</th>
+        <th>By User</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var report in Model.Reports.OrderBy(r => r.CreatedAt))
+    {
+        <tr>
+            <td>@report.Id</td>
+            <td>@report.CreatedAt</td>
+            <td>@report.ByUser.UserName</td>
+            <td>
+                <a class="btn btn-primary" asp-page="ManageReport" asp-route-reportId="@report.Id">Manage Report</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
