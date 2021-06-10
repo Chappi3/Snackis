@@ -10,6 +10,7 @@ namespace SnackisAPI.Data.Configurations
         {
             builder.Property(p => p.Title).IsRequired();
             builder.Property(p => p.Content).IsRequired();
+            builder.Property(p => p.UserId).IsRequired();
 
             builder.HasOne<SubCategory>().WithMany().HasForeignKey(p => p.SubCategoryId).OnDelete(DeleteBehavior.Cascade);
         }
