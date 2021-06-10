@@ -8,8 +8,9 @@ namespace SnackisAPI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Report> builder)
         {
+            builder.Property(r => r.CommentId).IsRequired(false);
+            builder.Property(r => r.PostId).IsRequired(false);
             builder.Property(r => r.Content).IsRequired();
-            builder.Property(r => r.ForUser).IsRequired();
             builder.Property(r => r.ByUser).IsRequired();
         }
     }
