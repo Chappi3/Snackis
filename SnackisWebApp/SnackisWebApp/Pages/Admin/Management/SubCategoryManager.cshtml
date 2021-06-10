@@ -4,7 +4,15 @@
     ViewData["Title"] = "Sub Category Manager";
 }
 
-<h1>Sub Category Manager</h1>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-page="/Admin/Dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a asp-page="CategoryManager">Category Manager</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Subcategory Manager</li>
+    </ol>
+</nav>
+
+<h1>Subcategory Manager</h1>
 <form method="post" asp-page-handler="AddSubCategory">
     <div class="input-group">
         <input type="hidden" asp-for="Input.CategoryId" value="@Model.Category.Id"/>
