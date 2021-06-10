@@ -77,6 +77,7 @@ namespace SnackisAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Report>> PostReport(Report report)
         {
+            report.CreatedAt = DateTime.Now;
             _context.Reports.Add(report);
             await _context.SaveChangesAsync();
 
