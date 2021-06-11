@@ -30,5 +30,11 @@ namespace SnackisWebApp.Gateways
         {
             return await _httpClient.GetFromJsonAsync<Post>(_httpClient.BaseAddress + "/Posts/" + postId);
         }
+
+        public async Task<bool> DeletePost(string postId)
+        {
+            var response = await _httpClient.DeleteAsync(_httpClient.BaseAddress + "/Posts/" + postId);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

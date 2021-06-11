@@ -4,6 +4,13 @@
     ViewData["Title"] = "Category Manager";
 }
 
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-page="/Admin/Dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Category Manager</li>
+    </ol>
+</nav>
+
 <h1>Category Manager</h1>
 <form method="post" asp-page-handler="AddCategory">
     <div class="input-group">
@@ -28,11 +35,13 @@
                 <td>@category.Id</td>
                 <td>@category.Name</td>
                 <td>
-                    <form method="post" asp-page-handler="DeleteCategory">
-                        <input type="hidden" asp-for="CategoryId" value="@category.Id" />
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                    <a class="btn btn-primary" asp-page="SubCategoryManager" asp-route-categoryId="@category.Id">Manage Sub Categories</a>
+                    <div class="row">
+                        <form method="post" asp-page-handler="DeleteCategory">
+                            <input type="hidden" asp-for="CategoryId" value="@category.Id" />
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                        <a class="btn btn-primary" asp-page="SubCategoryManager" asp-route-categoryId="@category.Id">Manage Subcategories</a>
+                    </div>
                 </td>
             </tr>
         }

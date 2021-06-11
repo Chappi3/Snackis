@@ -57,7 +57,7 @@ namespace SnackisWebApp.Pages.Admin.Management
             if (CategoryId != null || CategoryId != string.Empty)
             {
                 // Todo: create seperate endpoint to get subcategories by categoryId
-                var subCategories = await _subCategoryGateway.GetAllSubCategories();
+                /*var subCategories = await _subCategoryGateway.GetAllSubCategories();
                 var relatedSubCategories = subCategories.Where(s => s.CategoryId == CategoryId).ToList();
 
                 if (relatedSubCategories.Count == 0)
@@ -68,6 +68,12 @@ namespace SnackisWebApp.Pages.Admin.Management
                     {
                         return RedirectToPage();
                     }
+                }*/
+
+                var isSuccess = await _categoryGateway.DeleteCategory(CategoryId);
+                if (isSuccess)
+                {
+                    return RedirectToPage();
                 }
             }
             return BadRequest();

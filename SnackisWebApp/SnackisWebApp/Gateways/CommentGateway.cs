@@ -30,5 +30,11 @@ namespace SnackisWebApp.Gateways
         {
             return await _httpClient.GetFromJsonAsync<Comment>(_httpClient.BaseAddress + "/Comments/" + commentId);
         }
+
+        public async Task<bool> DeleteComment(string commentId)
+        {
+            var response = await _httpClient.DeleteAsync(_httpClient.BaseAddress + "/Comments/" + commentId);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

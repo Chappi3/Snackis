@@ -4,14 +4,38 @@
 }
 
 <h1>Managing report @Model.Report.Id created at @Model.Report.CreatedAt</h1>
-@if (Model.Report.PostId != null)
+@if (Model.Report.Post != null)
 {
-    <p>@Model.Report.PostId</p>
+    <p>@Model.Report.Post.Title</p>
+    <p>@Model.Report.Post.Content</p>
+    <p>@Model.Report.ByUser.UserName</p>
+    <p>@Model.Report.CreatedAt</p>
     <p>@Model.Report.Content</p>
+    <form method="post" asp-page-handler="DeletePost">
+        <input type="hidden" asp-for="DeletePostId" value="@Model.Report.Post.Id" />
+        <input type="hidden" asp-for="DeleteReportId" value="@Model.Report.Id" />
+        <button class="btn btn-danger" type="submit">Delete Post</button>
+    </form>
 }
-else if (Model.Report.CommentId != null)
+else if (Model.Report.Comment != null)
 {
-    <p>@Model.Report.CommentId</p>
+    <p>@Model.Report.Comment.Content</p>
+    <p>@Model.Report.ByUser.UserName</p>
+    <p>@Model.Report.CreatedAt</p>
     <p>@Model.Report.Content</p>
+    <form method="post" asp-page-handler="DeleteComment">
+        <input type="hidden" asp-for="DeleteCommentId" value="@Model.Report.Comment.Id" />
+        <input type="hidden" asp-for="DeleteReportId" value="@Model.Report.Id" />
+        <button class="btn btn-danger" type="submit">Delete Comment</button>
+    </form>
 }
+
+<div class="row text-center">
+    <div class="col-12 align-content-center">
+        <form method="post">
+            <input type="hidden" asp-for="DeleteReportId" value="@Model.Report.Id"/>
+            <button class="btn btn-danger" type="submit">Delete Report</button>
+        </form>
+    </div>
+</div>
 
