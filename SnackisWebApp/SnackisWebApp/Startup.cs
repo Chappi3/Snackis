@@ -66,6 +66,7 @@ namespace SnackisWebApp
             {
                 options.Conventions.AuthorizeFolder("/Admin", "RequireAdminRole");
                 options.Conventions.AuthorizePage("/CreateReport");
+                options.Conventions.AuthorizeFolder("/User");
             });
 
             var baseAddress = new Uri(Configuration["BaseApiUrl"]);
@@ -91,6 +92,11 @@ namespace SnackisWebApp
             });
 
             services.AddHttpClient<ReportGateway>(options =>
+            {
+                options.BaseAddress = baseAddress;
+            });
+
+            services.AddHttpClient<MessageGateway>(options =>
             {
                 options.BaseAddress = baseAddress;
             });

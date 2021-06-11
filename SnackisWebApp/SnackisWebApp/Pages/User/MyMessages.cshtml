@@ -1,0 +1,40 @@
+﻿@page
+@model SnackisWebApp.Pages.User.MyMessagesModel
+@{
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <h3>Inbox</h3>
+            @foreach (var message in Model.Messages.OrderBy(m => m.SentAt))
+            {
+                <div class="row">
+                    <div class="col">
+                        @message.SentAt
+                    </div>
+                    <div class="col">
+                        @message.FromUser.UserName
+                    </div>
+                    <div class="col">
+                        @message.Content
+                    </div>
+                    @if (!message.IsRead)
+                    {
+                        <div class="col">
+                            <form method="post">
+                                <input type="hidden" asp-for="Message.Id" value="@message.Id" />
+                                <input type="hidden" asp-for="Message.Content" value="@message.Content" />
+                                <input type="hidden" asp-for="Message.FromUser" value="@message.FromUser.Id" />
+                                <input type="hidden" asp-for="Message.ToUser" value="@message.CurrentUser.Id" />
+                                <input type="hidden" asp-for="Message.SentAt" value="@message.SentAt" />
+                                <input type="hidden" asp-for="Message.IsRead" value="@true" />
+                                <button class="btn btn-success" type="submit">Mark as read</button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

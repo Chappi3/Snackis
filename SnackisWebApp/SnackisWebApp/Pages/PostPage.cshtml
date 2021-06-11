@@ -9,9 +9,16 @@
     {
         <div class="col-4 align-content-center">
             <p>@Model.Post.CreatedAt</p>
-            <a asp-page="UserProfile" asp-route-userId="@Model.CreatedByUser.Id">
+            @if (Model.UserId != Model.CreatedByUser.Id)
+            {
+                <a asp-page="/User/SendMessage" asp-route-toUserId="@Model.CreatedByUser.Id">
+                    <p>@Model.CreatedByUser.UserName</p>
+                </a>
+            }
+            else
+            {
                 <p>@Model.CreatedByUser.UserName</p>
-            </a>
+            }
             @if (Model.CreatedByUser.ProfileImg != null)
             {
                 <img style="width:150px;height:150px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.CreatedByUser.ProfileImg))">
@@ -46,9 +53,16 @@
         {
             <div class="col-4 align-content-center">
                 <p>@comment.CreatedAt</p>
-                <a asp-page="UserProfile" asp-route-userId="@comment.CreatedByUser.Id">
+                @if (Model.UserId != comment.CreatedByUser.Id)
+                {
+                    <a asp-page="/User/SendMessage" asp-route-toUserId="@comment.CreatedByUser.Id">
+                        <p>@comment.CreatedByUser.UserName</p>
+                    </a>
+                }
+                else
+                {
                     <p>@comment.CreatedByUser.UserName</p>
-                </a>
+                }
                 @if (comment.CreatedByUser.ProfileImg != null)
                 {
                     <img style="width: 150px; height: 150px; object-fit: cover" src="data:image/*;base64,@(Convert.ToBase64String(comment.CreatedByUser.ProfileImg))">

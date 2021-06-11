@@ -1,19 +1,24 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using SnackisWebApp.Gateways
 @using SnackisWebApp.Models
 
 @inject SignInManager<SnackisUser> SignInManager
 @inject UserManager<SnackisUser> UserManager
+@inject MessageGateway MessageGateway
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item" style="align-self: center;">
-            <a>
+            <a class="nav-link" asp-page="/User/MyMessages" asp-route-userId="@UserManager.GetUserId(User)">
                 <span>
                     <i class="fas fa-comment-dots"></i>
-                    <span class="badge rounded-pill bg-warning">
-                        <!-- Todo: inject and call message gateway to get num of unread -->
-                    </span>
+                    @if (MessageGateway.GetNumOfUnreadMessagesByUserId(UserManager.GetUserId(User)).Result > 0)
+                    {
+                        <span class="badge rounded-pill bg-warning">
+                            @MessageGateway.GetNumOfUnreadMessagesByUserId(UserManager.GetUserId(User)).Result
+                        </span>
+                    }
                 </span>
             </a>
         </li>
