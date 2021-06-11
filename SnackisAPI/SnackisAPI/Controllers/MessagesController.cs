@@ -41,6 +41,20 @@ namespace SnackisAPI.Controllers
             return message;
         }
 
+        // GET: api/Messages/UserId/12345
+        [HttpGet("UserId/{userId}")]
+        public async Task<ActionResult<List<Message>>> GetAllMessagesByUserId(Guid userId)
+        {
+            return await _context.Messages.Where(m => m.ToUser == userId).ToListAsync();
+        }
+
+        // GET: api/Messages/Unread/123145
+        [HttpGet("Unread/{userId}")]
+        public async Task<ActionResult<int>> GetNumOfUnreadMessagesByUserId(Guid userId)
+        {
+            return await _context.Messages.Where(m => m.ToUser == userId && m.IsRead == false).CountAsync();
+        }
+
         // PUT: api/Messages/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
