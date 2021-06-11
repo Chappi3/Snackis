@@ -9,5 +9,6 @@ namespace SnackisAPI.Models
         public Guid FromUser { get; set; }
         public string Content { get; set; }
         public DateTime SentAt { get; set; }
+        public bool IsRead { get; set; }
     }
 }
