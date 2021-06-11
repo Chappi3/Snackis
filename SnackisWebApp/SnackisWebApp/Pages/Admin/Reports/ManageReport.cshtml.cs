@@ -77,7 +77,6 @@ namespace SnackisWebApp.Pages.Admin.Reports
                 };
             }
             
-
             return Page();
         }
 
@@ -99,20 +98,30 @@ namespace SnackisWebApp.Pages.Admin.Reports
         {
             if (DeleteCommentId != null)
             {
-                
+                var resultComment = await _commentGateway.DeleteComment(DeleteCommentId);
+                var resultReport = await _reportGateway.DeleteReport(DeleteReportId);
+                if (resultComment && resultReport)
+                {
+                    return RedirectToPage("ReportsPage");
+                }
             }
 
-            return RedirectToPage();
+            return BadRequest();
         }
 
         public async Task<IActionResult> OnPostDeletePost()
         {
-            if (DeletePostId != null)
+            if (DeletePostId != null && DeleteReportId != null)
             {
-                
+                var resultPost = await _postGateway.DeletePost(DeletePostId);
+                var resultReport = await _reportGateway.DeleteReport(DeleteReportId);
+                if (resultPost && resultReport)
+                {
+                    return RedirectToPage("ReportsPage");
+                }
             }
 
-            return RedirectToPage();
+            return BadRequest();
         }
     }
 }

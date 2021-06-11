@@ -12,6 +12,9 @@ namespace SnackisWebApp.Pages.Admin.Management
     {
         private readonly UserManager<SnackisUser> _userManager;
 
+        [BindProperty]
+        public string DeleteUserId { get; set; }
+
         public List<UserWithRoles> UserRolesList { get; set; }
 
         public class UserWithRoles
@@ -49,6 +52,21 @@ namespace SnackisWebApp.Pages.Admin.Management
             }
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (DeleteUserId != null)
+            {
+                var user = await _userManager.FindByIdAsync(DeleteUserId);
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToPage();
+                }
+            }
+
+            return NotFound();
         }
 
         private async Task<List<string>> GetUserRoles(SnackisUser user)

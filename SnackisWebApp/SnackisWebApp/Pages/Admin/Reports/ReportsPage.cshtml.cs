@@ -73,6 +73,10 @@ namespace SnackisWebApp.Pages.Admin.Reports
                     };
                     Reports.Add(customReport);
                 }
+                else
+                {
+                    await _reportGateway.DeleteReport(report.Id);
+                }
             }
 
             return Page();
