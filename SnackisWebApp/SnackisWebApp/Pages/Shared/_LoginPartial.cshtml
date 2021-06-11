@@ -1,8 +1,20 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using SnackisWebApp.Gateways
 @using SnackisWebApp.Models
+@using System.Security.Cryptography.X509Certificates
 
 @inject SignInManager<SnackisUser> SignInManager
 @inject UserManager<SnackisUser> UserManager
+@inject MessageGateway MessageGateway
+
+@{
+    Task<int> NumOfUnreadMessages = null;
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        NumOfUnreadMessages = MessageGateway.GetNumOfUnreadMessagesByUserId(UserManager.GetUserId(User));
+    }
+}
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
@@ -11,9 +23,12 @@
             <a>
                 <span>
                     <i class="fas fa-comment-dots"></i>
-                    <span class="badge rounded-pill bg-warning">
-                        <!-- Todo: inject and call message gateway to get num of unread -->
-                    </span>
+                    @if (NumOfUnreadMessages != null)
+                    {
+                        <span class="badge rounded-pill bg-warning">
+                            @NumOfUnreadMessages
+                        </span>
+                    }
                 </span>
             </a>
         </li>
