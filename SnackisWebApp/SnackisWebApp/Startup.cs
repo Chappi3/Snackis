@@ -66,6 +66,7 @@ namespace SnackisWebApp
             {
                 options.Conventions.AuthorizeFolder("/Admin", "RequireAdminRole");
                 options.Conventions.AuthorizePage("/CreateReport");
+                options.Conventions.AuthorizeFolder("/User");
             });
 
             var baseAddress = new Uri(Configuration["BaseApiUrl"]);
