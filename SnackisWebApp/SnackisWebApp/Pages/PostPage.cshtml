@@ -4,110 +4,144 @@
     ViewData["Title"] = @Model.Post.Title;
 }
 
-<div class="row text-center">
-    @if (Model.CreatedByUser != null)
-    {
-        <div class="col-4 align-content-center">
-            <p>@Model.Post.CreatedAt</p>
-            @if (Model.UserId != Model.CreatedByUser.Id)
+<div class="container">
+    <div class="sticky-top justify-content-center">
+        <div class="col">
+            @if (Model.UserId != null)
             {
-                <a asp-page="/User/SendMessage" asp-route-toUserId="@Model.CreatedByUser.Id">
-                    <p>@Model.CreatedByUser.UserName</p>
-                </a>
+                <form method="post" asp-page-handler="AddComment">
+                    <input type="hidden" asp-for="Input.UserId" value="@Model.UserId" />
+                    <input type="hidden" asp-for="Input.PostId" value="@Model.Post.Id" />
+                    <div class="form-floating form-group my-2">
+                        <textarea id="floatingTextarea" class="form-control" style="width: 50%; height: 50%" placeholder="Content" asp-for="Input.Content"></textarea>
+                        <label for="floatingTextarea" asp-for="Input.Content"></label>
+                    </div>
+                    <button class="btn btn-info" type="submit">Add New Comment</button>
+                </form>
             }
             else
             {
-                <p>@Model.CreatedByUser.UserName</p>
-            }
-            @if (Model.CreatedByUser.ProfileImg != null)
-            {
-                <img style="width:150px;height:150px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.CreatedByUser.ProfileImg))">
-            }
-            else
-            {
-                <img style="width:150px;height:150px; object-fit:cover" src="/img/user-profile-icon.jpg">
+                <p>Please <a asp-area="Identity" asp-page="Account/Login">login</a> to create a comment!</p>
             }
         </div>
-    }
-    else
-    {
-        <div class="col-4 align-content-center">
-            <p>@Model.Post.CreatedAt</p>
-            <p>Deleted user</p>
-        </div>
-    }
-    <div class="col-8 align-content-center">
-        <h3>@Model.Post.Title</h3>
-        <textarea class="rounded w-100 h-75" readonly>@Model.Post.Content</textarea>
     </div>
-    <div>
-        <a class="btn btn-warning" asp-page="CreateReport" asp-route-PostId="@Model.Post.Id">Report</a>
+    <div class="p-2 p-sm-3 collapse show">
+        <div class="card mb-2">
+            <div class="card-body p-2 p-sm-3" style="background-color: aliceblue">
+                <div class="row">
+                    @if (Model.CreatedByUser != null)
+                    {
+                        <div class="col-3 text-center">
+                            @if (Model.CreatedByUser.ProfileImg != null)
+                            {
+                                <img class="mr-3 rounded border shadow" style="width: 150px; height: 150px; object-fit: cover;" src="data:image/*;base64,@(Convert.ToBase64String(Model.CreatedByUser.ProfileImg))" alt="User image">
+                            }
+                            else
+                            {
+                                <img class="mr-3 rounded border shadow" style="object-fit: cover;" width="100" src="/img/user-profile-icon.jpg" alt="User image">
+                            }
+                            <p class="text-muted">
+                                @Model.CreatedByUser.UserName
+                                <button class="border-0 bg-transparent nav-item" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <span style="font-size: 1rem; color: rgba(0, 0, 0, .55)">
+                                        <i class="fas fa-comment-dots ml-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message to @Model.CreatedByUser.UserName"></i>
+                                    </span>
+                                </button>
+                            </p>
+                            <p class="small">@Model.Post.CreatedAt</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-3 text-center">
+                            <img class="mr-3 rounded border shadow" style="object-fit: cover;" width="100" src="/img/user-profile-icon.jpg" alt="User image">
+                            <p class="text-muted">Deleted user</p>
+                            <p class="small">@Model.Post.CreatedAt</p>
+                        </div>
+                    }
+                    <div class="col-8 bg-light rounded">
+                        <div class="align-content-center">
+                            <h5 class="text-center">@Model.Post.Title</h5>
+                        </div>
+                        <hr />
+                        <textarea class="bg-transparent border-0 w-100 h-75" readonly>@Model.Post.Content</textarea>
+                    </div>
+                    <div class="col-1 text-right">
+                        <button class="border-0 bg-transparent" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <span class="text-warning text-right" style="font-size: 1rem;">
+                                <i class="fas fa-exclamation-triangle text-right" data-bs-toggle="tooltip" data-bs-placement="top" title="Report this post"></i>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @foreach (var comment in Model.Comments.OrderBy(c => c.CreatedAt))
+        {
+            <div class="card mb-2">
+                <div class="card-body p-2 p-sm-3" style="background-color: whitesmoke">
+                    <div class="row">
+                        <div class="col-3 text-center">
+                            @if (comment.CreatedByUser?.ProfileImg != null)
+                            {
+                                <img class="mr-3 rounded border shadow" style="width: 150px; height: 150px; object-fit: cover;" src="data:image/*;base64,@(Convert.ToBase64String(comment.CreatedByUser.ProfileImg))" alt="User image">
+                            }
+                            else
+                            {
+                                <img class="mr-3 rounded border shadow" style="object-fit: cover;" width="150" src="/img/user-profile-icon.jpg" alt="User image">
+                            }
+                            <p class="text-muted">
+                                @comment.CreatedByUser?.UserName
+                                <button class="border-0 bg-transparent nav-item" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <span style="font-size: 1rem; color: rgba(0, 0, 0, .55)">
+                                        <i class="fas fa-comment-dots ml-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message to @comment.CreatedByUser?.UserName"></i>
+                                    </span>
+                                </button>
+                            </p>
+                            <p class="small">@comment.CreatedAt</p>
+                        </div>
+                        <div class="col-8 bg-light rounded">
+                            <textarea class="bg-transparent border-0 w-100 h-100" readonly>@comment.Content</textarea>
+                        </div>
+                        <div class="col-1 text-right">
+                            <button class="border-0 bg-transparent" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <span class="text-warning text-right" style="font-size: 1rem;">
+                                    <i class="fas fa-exclamation-triangle text-right" data-bs-toggle="tooltip" data-bs-placement="top" title="Report this comment"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>
 
-@foreach (var comment in Model.Comments.OrderBy(c => c.CreatedAt))
-{
-    <hr class="my-3" />
-    <div class="row text-center my-2">
-        @if (comment.CreatedByUser != null)
-        {
-            <div class="col-4 align-content-center">
-                <p>@comment.CreatedAt</p>
-                @if (Model.UserId != comment.CreatedByUser.Id)
-                {
-                    <a asp-page="/User/SendMessage" asp-route-toUserId="@comment.CreatedByUser.Id">
-                        <p>@comment.CreatedByUser.UserName</p>
-                    </a>
-                }
-                else
-                {
-                    <p>@comment.CreatedByUser.UserName</p>
-                }
-                @if (comment.CreatedByUser.ProfileImg != null)
-                {
-                    <img style="width: 150px; height: 150px; object-fit: cover" src="data:image/*;base64,@(Convert.ToBase64String(comment.CreatedByUser.ProfileImg))">
-                }
-                else
-                {
-                    <img style="width: 150px; height: 150px; object-fit: cover" src="/img/user-profile-icon.jpg">
-                }
+<!-- Test Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        }
-        else
-        {
-            <div class="col-4 align-content-center">
-                <p>@comment.CreatedAt</p>
-                <p>Deleted user</p>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Recipient:</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Message:</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </form>
             </div>
-        }
-        <div class="col-8 align-content-center">
-            <textarea class="rounded w-100 h-75" readonly>@comment.Content</textarea>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
         </div>
-        <div>
-            <a class="btn btn-warning" asp-page="CreateReport" asp-route-CommentId="@comment.Id">Report</a>
-        </div>
-    </div>
-}
-
-<div class="row text-center">
-    <div class="col-12 align-content-center">
-        @if (Model.UserId != null)
-        {
-            <form method="post" asp-page-handler="AddComment">
-                <input type="hidden" asp-for="Input.UserId" value="@Model.UserId" />
-                <input type="hidden" asp-for="Input.PostId" value="@Model.Post.Id" />
-                <div class="form-group my-2">
-                    <label class="control-label" asp-for="Input.Content"></label>
-                    <textarea asp-for="Input.Content" class="form-control"></textarea>
-                </div>
-                <div class="input-group-btn">
-                    <button class="btn btn-info">Add New Comment</button>
-                </div>
-            </form>
-        }
-        else
-        {
-            <p>Please <a asp-area="Identity" asp-page="Account/Login">login</a> to create a comment!</p>
-        }
     </div>
 </div>

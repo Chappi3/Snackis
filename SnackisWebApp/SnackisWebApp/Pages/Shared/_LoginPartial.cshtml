@@ -10,7 +10,7 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item" style="align-self: center;">
-            <a class="nav-link" asp-page="/User/MyMessages" asp-route-userId="@UserManager.GetUserId(User)">
+            <a class="nav-link" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Messages" asp-page="/User/MyMessages" asp-route-userId="@UserManager.GetUserId(User)">
                 <span>
                     <i class="fas fa-comment-dots"></i>
                     @if (MessageGateway.GetNumOfUnreadMessagesByUserId(UserManager.GetUserId(User)).Result > 0)
@@ -24,7 +24,7 @@
         </li>
         <li class="nav-item" style="align-self: center;">
             <div class="dropdown">
-                <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="userDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                     @if (UserManager.GetUserAsync(User).Result.ProfileImg != null)
                     {
                         <img alt="user image" style="width: 40px; height: 40px; object-fit: cover; border-radius: 30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfileImg))">
@@ -35,31 +35,38 @@
                     }
                     Hello @UserManager.GetUserName(User)!
                 </button>
-                <div class="dropdown-menu justify-content-start">
-                    <a id="manage" class="dropdown-item text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="User Settings">
-                        <span style="font-size: 1rem;">
-                            <i class="fas fa-user-cog"></i>
-                        </span>
-                        User Settings
-                    </a>
+                <ul class="dropdown-menu justify-content-start" aria-labelledby="userDropdownMenuButton">
+                    <li>
+                        <a id="manage" class="dropdown-item text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="User Settings">
+                            <span style="font-size: 1rem;">
+                                <i class="fas fa-user-cog"></i>
+                            </span>
+                            User Settings
+                        </a>
+                    </li>
+
                     @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin"))
                     {
-                        <a class="dropdown-item text-dark" asp-page="/Admin/Dashboard" title="Admin Dashboard">
-                            <span style="font-size: 1rem;">
-                                <i class="fas fa-tools"></i>
-                            </span>
-                            Admin Dashboard
-                        </a>
+                        <li>
+                            <a class="dropdown-item text-dark" asp-page="/Admin/Dashboard" title="Admin Dashboard">
+                                <span style="font-size: 1rem;">
+                                    <i class="fas fa-tools"></i>
+                                </span>
+                                Admin Dashboard
+                            </a>
+                        </li>
                     }
-                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-                        <button id="logout" type="submit" title="Logout" class="dropdown-item text-dark">
-                            <span style="font-size: 1rem;">
-                                <i class="fas fa-sign-out-alt"></i>
-                            </span>
-                            Logout
-                        </button>
-                    </form>
-                </div>
+                    <li>
+                        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new {area = ""})">
+                            <button id="logout" type="submit" title="Logout" class="dropdown-item text-dark">
+                                <span style="font-size: 1rem;">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </span>
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
             </div>
         </li>
     }
