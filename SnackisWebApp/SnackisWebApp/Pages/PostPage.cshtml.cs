@@ -14,11 +14,18 @@ namespace SnackisWebApp.Pages
     {
         private readonly PostGateway _postGateway;
         private readonly CommentGateway _commentGateway;
+        private readonly ReportGateway _reportGateway;
+        private readonly MessageGateway _messageGateway;
+        private readonly SubCategoryGateway _subCategoryGateway;
         private readonly UserManager<SnackisUser> _userManager;
 
         public Post Post { get; set; }
         public string UserId { get; set; }
+        public SubCategory SubCategory { get; set; }
         public SnackisUser CreatedByUser { get; set; }
+
+        [TempData]
+        public string StatusMessage { get; set; }
 
         public List<CustomCommentModel> Comments { get; set; }
 
@@ -43,11 +50,45 @@ namespace SnackisWebApp.Pages
             public string UserId { get; set; }
         }
 
-        public PostPageModel(PostGateway postGateway, UserManager<SnackisUser> userManager, CommentGateway commentGateway)
+        [BindProperty]
+        public ReportInputModel ReportInput { get; set; }
+
+        public class ReportInputModel
+        {
+            [Required]
+            public string ByUser { get; set; }
+            [Required]
+            public string Content { get; set; }
+            [Required]
+            public string ReturnPostId { get; set; }
+
+            public string PostId { get; set; }
+            public string CommentId { get; set; }
+        }
+
+        [BindProperty] 
+        public MessageInputModel MessageInput { get; set; }
+
+        public class MessageInputModel
+        {
+            [Required]
+            public string ToUserId { get; set; }
+            [Required]
+            public string FromUserId { get; set; }
+            [Required]
+            public string Content { get; set; }
+            [Required]
+            public string ReturnPostId { get; set; }
+        }
+
+        public PostPageModel(PostGateway postGateway, UserManager<SnackisUser> userManager, CommentGateway commentGateway, ReportGateway reportGateway, MessageGateway messageGateway, SubCategoryGateway subCategoryGateway)
         {
             _postGateway = postGateway;
             _userManager = userManager;
             _commentGateway = commentGateway;
+            _reportGateway = reportGateway;
+            _messageGateway = messageGateway;
+            _subCategoryGateway = subCategoryGateway;
             Comments = new List<CustomCommentModel>();
         }
 
@@ -59,6 +100,7 @@ namespace SnackisWebApp.Pages
                 return NotFound();
             }
 
+            SubCategory = await _subCategoryGateway.GetSubcategoryById(Post.SubCategoryId);
             UserId = _userManager.GetUserId(User);
             CreatedByUser = await _userManager.FindByIdAsync(Post.UserId);
             var comments = await _commentGateway.GetCommentByPostId(postId);
@@ -80,17 +122,53 @@ namespace SnackisWebApp.Pages
 
         public async Task<IActionResult> OnPostAddComment()
         {
-            if (ModelState.IsValid)
+            if (Input.UserId != null && Input.PostId != null && (Input.Content != null || Input.Content != string.Empty))
             {
-                var status = await _commentGateway.CreateComment(Input.Content, Input.PostId, Input.UserId);
+                var result = await _commentGateway.CreateComment(Input.Content, Input.PostId, Input.UserId);
 
-                if (status)
+                if (result)
                 {
-                    return RedirectToPage(new{ postId = Input.PostId });
+                    StatusMessage = "Successfully created comment!";
+                    return RedirectToPage(new { postId = Input.PostId });
                 }
             }
 
-            return BadRequest();
+            StatusMessage = "Failed to create comment!";
+            return RedirectToPage(new { postId = Input.PostId });
+        }
+
+        public async Task<IActionResult> OnPostCreateReport()
+        {
+            if (ReportInput.ByUser != null && ReportInput.Content != null && ReportInput.ReturnPostId != null && (ReportInput.PostId != null || ReportInput.CommentId != null))
+            {
+                var result = await _reportGateway.CreateReport(ReportInput.Content, ReportInput.ByUser, ReportInput.PostId, ReportInput.CommentId);
+
+                if (result)
+                {
+                    StatusMessage = "Successfully sent report!";
+                    return RedirectToPage(new {postId = ReportInput.ReturnPostId });
+                }
+            }
+
+            StatusMessage = "Failed to send report!";
+            return RedirectToPage(new { postId = ReportInput.ReturnPostId });
+        }
+
+        public async Task<IActionResult> OnPostSendMessage()
+        {
+            if (MessageInput.FromUserId != null && MessageInput.ToUserId != null && MessageInput.ReturnPostId != null && (MessageInput.Content != null || MessageInput.Content != string.Empty))
+            {
+                var result = await _messageGateway.CreateMessage(MessageInput.FromUserId, MessageInput.ToUserId, MessageInput.Content);
+
+                if (result)
+                {
+                    StatusMessage = "Successfully sent message!";
+                    return RedirectToPage(new {postId = MessageInput.ReturnPostId});
+                }
+            }
+
+            StatusMessage = "Failed to send message!";
+            return RedirectToPage(new { postId = MessageInput.ReturnPostId });
         }
     }
 }
