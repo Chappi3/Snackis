@@ -4,37 +4,50 @@
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col text-center">
-            <h3>Inbox</h3>
-            @foreach (var message in Model.Messages.OrderBy(m => m.SentAt))
-            {
-                <div class="row">
-                    <div class="col">
-                        @message.SentAt
-                    </div>
-                    <div class="col">
-                        @message.FromUser.UserName
-                    </div>
-                    <div class="col">
-                        @message.Content
-                    </div>
-                    @if (!message.IsRead)
-                    {
-                        <div class="col">
-                            <form method="post">
-                                <input type="hidden" asp-for="Message.Id" value="@message.Id" />
-                                <input type="hidden" asp-for="Message.Content" value="@message.Content" />
-                                <input type="hidden" asp-for="Message.FromUser" value="@message.FromUser.Id" />
-                                <input type="hidden" asp-for="Message.ToUser" value="@message.CurrentUser.Id" />
-                                <input type="hidden" asp-for="Message.SentAt" value="@message.SentAt" />
-                                <input type="hidden" asp-for="Message.IsRead" value="@true" />
-                                <button class="btn btn-success" type="submit">Mark as read</button>
-                            </form>
+    <div class="row justify-content-center">
+        <div class="col-8 text-center">
+            <h3>Inkorg</h3>
+            <div class="accordion" id="accordionInboxMessages">
+                @{
+                    var num = 1;
+                }
+                @foreach (var message in Model.Messages.OrderByDescending(m => m.SentAt))
+                {
+                    var heading = "heading" + num;
+                    var collapse = "collapse" + num;
+                    var collapseId = "#collapse" + num;
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="@heading">
+                            @if (message.IsRead)
+                            {
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@collapseId" aria-expanded="false" aria-controls="@collapse">
+                                    <span class="text-left">Meddelande från @message.FromUser.UserName Skickades @message.SentAt</span>
+                                </button>
+                            }
+                            else
+                            {
+                                <form method="post">
+                                    <input type="hidden" asp-for="Message.Id" value="@message.Id" />
+                                    <input type="hidden" asp-for="Message.Content" value="@message.Content" />
+                                    <input type="hidden" asp-for="Message.SentAt" value="@message.SentAt" />
+                                    <input type="hidden" asp-for="Message.FromUser" value="@message.FromUser.Id" />
+                                    <input type="hidden" asp-for="Message.ToUser" value="@message.CurrentUser.Id" />
+                                    <input type="hidden" asp-for="Message.IsRead" value="@true" />
+                                    <button class="accordion-button" type="submit" data-bs-toggle="collapse" data-bs-target="@collapseId" aria-expanded="false" aria-controls="@collapse">
+                                        <span class="text-left"><strong>Meddelande från @message.FromUser.UserName Skickades @message.SentAt</strong></span>
+                                    </button>
+                                </form>
+                            }
+                        </h2>
+                        <div id="@collapse" class="accordion-collapse collapse show" aria-labelledby="@heading" data-bs-parent="#accordionInboxMessages">
+                            <div class="accordion-body">
+                                <textarea class="bg-transparent border-0 w-100" style="height: 100%" readonly>@message.Content</textarea>
+                            </div>
                         </div>
-                    }
-                </div>
-            }
+                    </div>
+                    num++;
+                }
+            </div>
         </div>
     </div>
 </div>

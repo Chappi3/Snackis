@@ -14,8 +14,6 @@ namespace SnackisWebApp.Pages.User
         private readonly UserManager<SnackisUser> _userManager;
         private readonly MessageGateway _messageGateway;
 
-        public string UserId { get; set; }
-
         [BindProperty]
         public Message Message { get; set; }
 
@@ -41,9 +39,9 @@ namespace SnackisWebApp.Pages.User
         public async Task<IActionResult> OnGetAsync(string userId)
         {
             if (userId == null) return NotFound();
-            UserId = userId;
+            if (userId != _userManager.GetUserId(User)) return Forbid();
 
-            var messages = await _messageGateway.GetAllMessagesByUserId(UserId);
+            var messages = await _messageGateway.GetAllMessagesByUserId(userId);
             foreach (var message in messages)
             {
                 var customMessage = new CustomMessageModel
