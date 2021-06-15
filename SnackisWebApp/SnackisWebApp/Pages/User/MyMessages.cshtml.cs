@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SnackisWebApp.Gateways;
 using SnackisWebApp.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace SnackisWebApp.Pages.User
 {
@@ -13,6 +14,7 @@ namespace SnackisWebApp.Pages.User
     {
         private readonly UserManager<SnackisUser> _userManager;
         private readonly MessageGateway _messageGateway;
+        private readonly SignInManager<SnackisUser> _signInManager;
 
         [BindProperty]
         public Message Message { get; set; }
@@ -29,17 +31,29 @@ namespace SnackisWebApp.Pages.User
             public bool IsRead { get; set; }
         }
 
-        public MyMessagesModel(UserManager<SnackisUser> userManager, MessageGateway messageGateway)
+        [BindProperty]
+        public MessageInputModel MessageInput { get; set; }
+
+        public class MessageInputModel
+        {
+            [Required] public string ToUserId { get; set; }
+            [Required] public string FromUserId { get; set; }
+            [Required] public string Content { get; set; }
+        }
+
+        public MyMessagesModel(UserManager<SnackisUser> userManager, MessageGateway messageGateway, SignInManager<SnackisUser> signInManager)
         {
             _userManager = userManager;
             _messageGateway = messageGateway;
+            _signInManager = signInManager;
             Messages = new List<CustomMessageModel>();
         }
 
-        public async Task<IActionResult> OnGetAsync(string userId)
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (!_signInManager.IsSignedIn(User)) return RedirectToPage("Login");
+            var userId = _userManager.GetUserId(User);
             if (userId == null) return NotFound();
-            if (userId != _userManager.GetUserId(User)) return Forbid();
 
             var messages = await _messageGateway.GetAllMessagesByUserId(userId);
             foreach (var message in messages)
@@ -61,10 +75,24 @@ namespace SnackisWebApp.Pages.User
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (ModelState.IsValid)
+            if (Message.Id != null && Message.FromUser != null && Message.ToUser != null && Message.Content != null && Message.IsRead)
             {
                 await _messageGateway.EditMessage(Message.Id, Message);
                 return RedirectToPage(new {userId = Message.ToUser});
+            }
+
+            return BadRequest();
+        }
+
+        public async Task<IActionResult> OnPostReplyMessage()
+        {
+            if (MessageInput.Content != null && MessageInput.FromUserId != null && MessageInput.ToUserId != null)
+            {
+                var result = await _messageGateway.CreateMessage(MessageInput.FromUserId, MessageInput.ToUserId, MessageInput.Content);
+                if (result)
+                {
+                    return RedirectToPage(new { userId = MessageInput.FromUserId });
+                }
             }
 
             return BadRequest();
