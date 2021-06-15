@@ -47,9 +47,9 @@ namespace SnackisWebApp
                     {
                         var admin = new SnackisUser
                         {
-                            Email = "Admin@mail.com",
                             UserName = "Admin",
-                            EmailConfirmed = true
+                            EmailConfirmed = true,
+                            PhoneNumberConfirmed = true
                         };
 
                         await userManager.CreateAsync(admin, "AdminPassword1!");

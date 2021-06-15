@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,47 +16,66 @@ namespace SnackisWebApp
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SnackisUserContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("SnackisUserContextConnection")));
+
+            if (Environment.IsDevelopment())
+            {
+                services.AddDbContext<SnackisUserContext>(options =>
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("SnackisUserContextLocal"));
+                });
+            }
+            else
+            {
+                services.AddDbContext<SnackisUserContext>(options =>
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("SnackisUserContextAzure"));
+                });
+            }
 
             services.AddIdentity<SnackisUser, IdentityRole>(options =>
-                {
-                    // Password settings
-                    options.Password.RequiredLength = 8;
-                    options.Password.RequireDigit = default;
-                    options.Password.RequireUppercase = default;
-                    options.Password.RequireLowercase = default;
-                    options.Password.RequiredUniqueChars = default;
-                    options.Password.RequireNonAlphanumeric = default;
+            {
+                // Password settings
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = default;
+                options.Password.RequireUppercase = default;
+                options.Password.RequireLowercase = default;
+                options.Password.RequiredUniqueChars = default;
+                options.Password.RequireNonAlphanumeric = default;
 
-                    // Sign in settings
-                    options.SignIn.RequireConfirmedEmail = default;
-                    options.SignIn.RequireConfirmedAccount = default;
-                    options.SignIn.RequireConfirmedPhoneNumber = default;
+                // Sign in settings
+                options.SignIn.RequireConfirmedEmail = default;
+                options.SignIn.RequireConfirmedAccount = default;
+                options.SignIn.RequireConfirmedPhoneNumber = default;
 
-                    // Lockout settings
-                    options.Lockout.AllowedForNewUsers = default;
-                    options.Lockout.DefaultLockoutTimeSpan = default;
-                    options.Lockout.MaxFailedAccessAttempts = default;
+                // Lockout settings
+                options.Lockout.AllowedForNewUsers = default;
+                options.Lockout.DefaultLockoutTimeSpan = default;
+                options.Lockout.MaxFailedAccessAttempts = default;
 
-                    // User settings
-                    options.User.RequireUniqueEmail = default;
-                    options.User.AllowedUserNameCharacters = default;
-                })
-                .AddEntityFrameworkStores<SnackisUserContext>()
-                .AddDefaultUI()
-                .AddDefaultTokenProviders();
+                // User settings
+                options.User.RequireUniqueEmail = default;
+                options.User.AllowedUserNameCharacters = default;
+            })
+            .AddEntityFrameworkStores<SnackisUserContext>()
+            .AddDefaultUI()
+            .AddDefaultTokenProviders();
 
-            // Todo: Add Cookie
+            services.AddCookiePolicy(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
             services.AddAuthorization(options =>
             {
@@ -73,7 +93,6 @@ namespace SnackisWebApp
             services.AddHttpClient<CategoryGateway>(options =>
             {
                 options.BaseAddress = baseAddress;
-                /*options.BaseAddress = new Uri(Configuration["BaseApiUrl"] + "/Categories");*/
             });
 
             services.AddHttpClient<SubCategoryGateway>(options =>
@@ -103,9 +122,9 @@ namespace SnackisWebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -119,6 +138,7 @@ namespace SnackisWebApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseCookiePolicy();
             app.UseRouting();
 
             app.UseAuthentication();

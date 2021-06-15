@@ -16,9 +16,13 @@ namespace SnackisWebApp.Pages
         private readonly SubCategoryGateway _subCategoryGateway;
         private readonly UserManager<SnackisUser> _userManager;
 
-        public string PostId { get; set; }
         public string UserId { get; set; }
         public SubCategory SubCategory { get; set; }
+
+        [BindProperty]
+        public string PostId { get; set; }
+        [BindProperty]
+        public string SubcategoryId { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -95,7 +99,14 @@ namespace SnackisWebApp.Pages
 
         public async Task<IActionResult> OnPostDeletePost()
         {
-            throw new NotImplementedException();
+            var result = await _postGateway.DeletePost(PostId);
+
+            if (result)
+            {
+                return RedirectToPage(new { subcategoryId = SubcategoryId });
+            }
+
+            return BadRequest();
         }
     }
 }

@@ -1,38 +1,46 @@
 ﻿@page
 @model SnackisWebApp.Pages.Admin.DashboardModel
 @{
+    ViewData["Title"] = "Admin kontrollpanel";
 }
 
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-page="/Index">Startsida</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Admin kontrollpanel</li>
+    </ol>
+</nav>
+
 <div class="container align-content-center shadow my-2 pb-4">
-    <p class="display-2 text-center">Admin Dashboard</p>
+    <p class="display-2 text-center">Admin Kontrollpanel</p>
 </div>
 
 <div class="container align-content-center shadow my-2 pb-4">
-    <p class="display-3 text-center text-primary pb-2">Management</p>
+    <p class="display-4 text-center text-primary pb-2">Management</p>
     <hr class="alert-primary" />
     <div class="row justify-content-center">
-        <div class="col-md-3">
-            <a class="btn btn-block btn-lg border border-primary rounded" asp-page="/Admin/Management/UserRolesManager">
+        <div class="col-md-3 text-center">
+            <a class="btn btn-block btn-lg btn-outline-primary rounded w-100" asp-page="/Admin/Management/UserRolesManager">
                 <span style="font-size: 8rem;">
-                    <i class="fas fa-address-book text-primary"></i>
+                    <i class="fas fa-address-book"></i>
                 </span>
                 <p style="font-size: 2rem;">User</p>
                 <p style="font-size: 2rem;">Manager</p>
             </a>
         </div>
-        <div class="col-md-3">
-            <a class="btn btn-block btn-lg border border-primary rounded" asp-page="/Admin/Management/RoleManager">
+        <div class="col-md-3 text-center">
+            <a class="btn btn-block btn-lg btn-outline-primary rounded w-100" asp-page="/Admin/Management/RoleManager">
                 <span style="font-size: 8rem;">
-                    <i class="fas fa-id-card text-primary"></i>
+                    <i class="fas fa-id-card"></i>
                 </span>
                 <p style="font-size: 2rem;">Role</p>
                 <p style="font-size: 2rem;">Manager</p>
             </a>
         </div>
-        <div class="col-md-3">
-            <a class="btn btn-block btn-lg border border-primary rounded" asp-page="/Admin/Management/CategoryManager">
+        <div class="col-md-3 text-center">
+            <a class="btn btn-block btn-lg btn-outline-primary rounded w-100" asp-page="/Admin/Management/CategoryManager">
                 <span style="font-size: 8rem;">
-                    <i class="fas fa-layer-group text-primary"></i>
+                    <i class="fas fa-layer-group"></i>
                 </span>
                 <p style="font-size: 2rem;">Category</p>
                 <p style="font-size: 2rem;">Manager</p>
@@ -42,13 +50,13 @@
 </div>
 
 <div class="container align-content-center shadow my-2 pb-4">
-    <p class="display-3 text-center text-warning pb-2">Reports</p>
+    <p class="display-4 text-center text-warning pb-2">Reports</p>
     <hr class=" alert-warning" />
     <div class="row justify-content-center pb-4">
-        <div class="col-md-3">
-            <a class="btn btn-block btn-lg border border-warning rounded" asp-page="/Admin/Reports/ReportsPage">
+        <div class="col-md-3 text-center">
+            <a class="btn btn-block btn-lg btn-outline-warning rounded w-100" asp-page="/Admin/Reports/ReportsPage">
                 <span style="font-size: 8rem;">
-                    <i class="fas fa-exclamation-triangle text-warning"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                 </span>
                 <p style="font-size: 2rem;">Reports list</p>
             </a>
