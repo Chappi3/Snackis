@@ -4,15 +4,33 @@
     ViewData["Title"] = "Role Manager";
 }
 
-<h1>Role Manager</h1>
-<form method="post" asp-page-handler="AddRole">
-    <div class="input-group">
-        <input asp-for="Input.Name" class="form-control w-25">
-        <span class="input-group-btn">
-            <button class="btn btn-info">Add New Role</button>
-        </span>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-page="/Index">Startsida</a></li>
+        <li class="breadcrumb-item"><a asp-page="/Admin/Dashboard">Admin kontrollpanel</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Role Manager</li>
+    </ol>
+</nav>
+
+<p class="display-4 text-center">Role Manager</p>
+
+<hr class="my-4" />
+
+<div class="row justify-content-center">
+    <div class="col-6 m-2">
+        <form method="post" asp-page-handler="AddRole">
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <input asp-for="Input.Name" class="form-control w-100 mr-2">
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-info">Add New Role</button>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>

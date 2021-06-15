@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SnackisWebApp.Gateways
@@ -28,7 +29,18 @@ namespace SnackisWebApp.Gateways
 
         public async Task<Comment> GetCommentById(string commentId)
         {
-            return await _httpClient.GetFromJsonAsync<Comment>(_httpClient.BaseAddress + "/Comments/" + commentId);
+            try
+            {
+                return await _httpClient.GetFromJsonAsync<Comment>(_httpClient.BaseAddress + "/Comments/" + commentId);
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+            catch (HttpRequestException)
+            {
+                return null;
+            }
         }
 
         public async Task<bool> DeleteComment(string commentId)

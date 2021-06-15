@@ -16,19 +16,32 @@ namespace SnackisWebApp
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SnackisUserContext>(options =>
+
+            if (Environment.IsDevelopment())
             {
-                options.UseSqlServer(Configuration.GetConnectionString("SnackisUserContextConnection"));
-            });
+                services.AddDbContext<SnackisUserContext>(options =>
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("SnackisUserContextLocal"));
+                });
+            }
+            else
+            {
+                services.AddDbContext<SnackisUserContext>(options =>
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("SnackisUserContextAzure"));
+                });
+            }
 
             services.AddIdentity<SnackisUser, IdentityRole>(options =>
             {
@@ -80,7 +93,6 @@ namespace SnackisWebApp
             services.AddHttpClient<CategoryGateway>(options =>
             {
                 options.BaseAddress = baseAddress;
-                /*options.BaseAddress = new Uri(Configuration["BaseApiUrl"] + "/Categories");*/
             });
 
             services.AddHttpClient<SubCategoryGateway>(options =>
@@ -110,9 +122,9 @@ namespace SnackisWebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }

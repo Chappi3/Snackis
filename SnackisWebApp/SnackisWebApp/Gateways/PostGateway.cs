@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using SnackisWebApp.Models;
 
@@ -28,7 +29,18 @@ namespace SnackisWebApp.Gateways
 
         public async Task<Post> GetPostById(string postId)
         {
-            return await _httpClient.GetFromJsonAsync<Post>(_httpClient.BaseAddress + "/Posts/" + postId);
+            try
+            {
+                return await _httpClient.GetFromJsonAsync<Post>(_httpClient.BaseAddress + "/Posts/" + postId);
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+            catch (HttpRequestException)
+            {
+                return null;
+            }
         }
 
         public async Task<bool> DeletePost(string postId)

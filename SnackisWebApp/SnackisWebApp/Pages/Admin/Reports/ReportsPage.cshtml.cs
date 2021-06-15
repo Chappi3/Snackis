@@ -49,29 +49,34 @@ namespace SnackisWebApp.Pages.Admin.Reports
 
             foreach (var report in reports)
             {
-                if (report.PostId != null)
+                if (report.PostId != null || report.CommentId != null)
                 {
+                    var post = await _postGateway.GetPostById(report.PostId);
+                    var comment = await _commentGateway.GetCommentById(report.CommentId);
+
                     var customReport = new CustomReportModel
                     {
                         Id = report.Id,
                         Content = report.Content,
                         CreatedAt = report.CreatedAt,
-                        ByUser = await _userManager.FindByIdAsync(report.ByUser),
-                        Post = await _postGateway.GetPostById(report.PostId)
+                        ByUser = await _userManager.FindByIdAsync(report.ByUser)
                     };
-                    Reports.Add(customReport);
-                }
-                else if (report.CommentId != null)
-                {
-                    var customReport = new CustomReportModel
+
+                    if (post != null)
                     {
-                        Id = report.Id,
-                        Content = report.Content,
-                        CreatedAt = report.CreatedAt,
-                        ByUser = await _userManager.FindByIdAsync(report.ByUser),
-                        Comment = await _commentGateway.GetCommentById(report.CommentId)
-                    };
-                    Reports.Add(customReport);
+                        customReport.Post = post;
+                        Reports.Add(customReport);
+                    }
+                    else if (comment != null)
+                    {
+                        customReport.Comment = comment;
+                        Reports.Add(customReport);
+                    }
+                    else
+                    {
+                        await _reportGateway.DeleteReport(report.Id);
+                        break;
+                    }
                 }
                 else
                 {
