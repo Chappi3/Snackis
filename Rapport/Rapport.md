@@ -53,10 +53,7 @@ När detta är klart och applikationen är igång ska två roller (User, Admin) 
 
 ## API Endpoints
 
-| Controllers |
-| --- |
-| `Categories` |
-| --- |
+### `Categories`
 | *Endpoint* | *Beskrivning* |
 | --- | --- |
 |GET: /api/Categories | Hämtar alla kategorier |
@@ -64,8 +61,8 @@ När detta är klart och applikationen är igång ska två roller (User, Admin) 
 |GET: /api/Categories/{id} | Hämtar en kategori via id |
 |PUT: /api/Categories/{id} | Ändrar en kategori via id |
 |DELETE: /api/Categories/{id} | Tar bort en kategori via id |
-| `Comments`   |
-| --- |
+
+### `Comments`
 | *Endpoint* | *Beskrivning* |
 | --- | --- |
 |GET: /api/Comments | Hämtar alla kommentarer |
@@ -74,8 +71,8 @@ När detta är klart och applikationen är igång ska två roller (User, Admin) 
 |PUT: /api/Comments/{id} | Ändrar en kommentar via id |
 |DELETE: /api/Comments/{id} | Tar bort en kommentar via id |
 |GET: /api/Comments/PostId/{postId} | Hämtar alla kommentarer baserat på postId |
-| `Messages` |
-| --- |
+
+### `Messages`
 | *Endpoint* | *Beskrivning* |
 | --- | --- |
 |GET: /api/Messages | Hämtar alla meddelanden |
@@ -85,8 +82,8 @@ När detta är klart och applikationen är igång ska två roller (User, Admin) 
 |DELETE: /api/Messages/{id} | Tar bort ett meddelande via id |
 |GET: /api/Messages/UserId/{userId} | Hämtar alla meddelanden baserat userId |
 |GET: /api/Messages/Unread/{userId} | Hämtar hur många olästa meddelanden baserat på userId |
-| `Posts` |
-| --- |
+
+### `Posts`
 | *Endpoint* | *Beskrivning* |
 | --- | --- |
 |GET: /api/Posts | Hämtar alla inlägg |
@@ -95,8 +92,8 @@ När detta är klart och applikationen är igång ska två roller (User, Admin) 
 |PUT: /api/Posts/{id} | Ändrar ett inlägg via id |
 |DELETE: /api/Posts/{id} | Tar bort ett inlägg via id |
 |GET: /api/Posts/subcategoryId/{subcategoryId} | Hämtar alla inlägg baserat på subcategoryId |
-| `Reports` |
-| --- |
+
+### `Reports`
 | *Endpoint* | *Beskrivning* |
 | --- | --- |
 |GET: /api/Reports | Hämtar alla rapporter |
@@ -104,8 +101,8 @@ När detta är klart och applikationen är igång ska två roller (User, Admin) 
 |GET: /api/Reports/{id} | Hämtar en rapport via id |
 |PUT: /api/Reports/{id} | Ändrar en rapport via id |
 |DELETE: /api/Reports/{id} | Tar bort en rapport via id |
-| `Subcategories` |
-| --- |
+
+### `Subcategories`
 | *Endpoint* | *Beskrivning* |
 | --- | --- |
 |GET: /api/SubCategories | Hämtar alla underkategorier |
