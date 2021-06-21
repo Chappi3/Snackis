@@ -53,100 +53,66 @@ När detta är klart och applikationen är igång ska två roller (User, Admin) 
 
 ## API Endpoints
 
-|### Controllers |
-|----------------|
-|#### Categories |
-|----------------|
-| Endpoint | Beskrivning |
-|------------------------|
+| Controllers |
+| --- |
+| `Categories` |
+| --- |
+| *Endpoint* | *Beskrivning* |
+| --- | --- |
 |GET: /api/Categories | Hämtar alla kategorier |
-|----------------------------------------------|
 |POST: /api/Categories | Skapar en kategori |
-|-------------------------------------------|
 |GET: /api/Categories/{id} | Hämtar en kategori via id |
-|------------------------------------------------------|
 |PUT: /api/Categories/{id} | Ändrar en kategori via id |
-|------------------------------------------------------|
 |DELETE: /api/Categories/{id} | Tar bort en kategori via id |
-|-----------------------------------------------------------|
-|#### Comments   |
-|----------------|
-| Endpoint | Beskrivning |
-|------------------------|
+| `Comments`   |
+| --- |
+| *Endpoint* | *Beskrivning* |
+| --- | --- |
 |GET: /api/Comments | Hämtar alla kommentarer |
-|---------------------------------------------|
 |POST: /api/Comments | Skapar en kommentar |
-|------------------------------------------|
 |GET: /api/Comments/{id} | Hämtar en kommentar via id |
-|-----------------------------------------------------|
 |PUT: /api/Comments/{id} | Ändrar en kommentar via id |
-|-----------------------------------------------------|
 |DELETE: /api/Comments/{id} | Tar bort en kommentar via id |
-|----------------------------------------------------------|
 |GET: /api/Comments/PostId/{postId} | Hämtar alla kommentarer baserat på postId |
-|-------------------------------------------------------------------------------|
-|#### Messages   |
-|----------------|
-| Endpoint | Beskrivning |
-|------------------------|
+| `Messages` |
+| --- |
+| *Endpoint* | *Beskrivning* |
+| --- | --- |
 |GET: /api/Messages | Hämtar alla meddelanden |
-|---------------------------------------------|
 |POST: /api/Messages | Skapar ett meddelande |
-|--------------------------------------------|
 |GET: /api/Messages/{id} | Hämtar ett meddelande via id |
-|-------------------------------------------------------|
 |PUT: /api/Messages/{id} | Ändrar ett meddelande via id |
-|-------------------------------------------------------|
 |DELETE: /api/Messages/{id} | Tar bort ett meddelande via id |
-|------------------------------------------------------------|
 |GET: /api/Messages/UserId/{userId} | Hämtar alla meddelanden baserat userId |
-|------------------------------------------------------------------------|
 |GET: /api/Messages/Unread/{userId} | Hämtar hur många olästa meddelanden baserat på userId |
-|-------------------------------------------------------------------------------------------|
-|#### Posts      |
-|----------------|
-| Endpoint | Beskrivning |
-|------------------------|
+| `Posts` |
+| --- |
+| *Endpoint* | *Beskrivning* |
+| --- | --- |
 |GET: /api/Posts | Hämtar alla inlägg |
-|-------------------------------------|
 |POST: /api/Posts | Skapar ett inlägg |
-|-------------------------------------|
 |GET: /api/Posts/{id} | Hämtar ett inlägg via id |
-|------------------------------------------------|
 |PUT: /api/Posts/{id} | Ändrar ett inlägg via id |
-|------------------------------------------------|
 |DELETE: /api/Posts/{id} | Tar bort ett inlägg via id |
-|-----------------------------------------------------|
 |GET: /api/Posts/subcategoryId/{subcategoryId} | Hämtar alla inlägg baserat på subcategoryId |
-|--------------------------------------------------------------------------------------------|
-|#### Reports    |
-|----------------|
-| Endpoint | Beskrivning |
-|------------------------|
+| `Reports` |
+| --- |
+| *Endpoint* | *Beskrivning* |
+| --- | --- |
 |GET: /api/Reports | Hämtar alla rapporter |
-|------------------------------------------|
 |POST: /api/Reports | Skapar en rapport |
-|---------------------------------------|
 |GET: /api/Reports/{id} | Hämtar en rapport via id |
-|--------------------------------------------------|
 |PUT: /api/Reports/{id} | Ändrar en rapport via id |
-|--------------------------------------------------|
 |DELETE: /api/Reports/{id} | Tar bort en rapport via id |
-|-------------------------------------------------------|
-|#### Subcategories |
-|-------------------|
-| Endpoint | Beskrivning |
-|------------------------|
+| `Subcategories` |
+| --- |
+| *Endpoint* | *Beskrivning* |
+| --- | --- |
 |GET: /api/SubCategories | Hämtar alla underkategorier |
-|------------------------------------------------------|
 |POST: /api/SubCategories | Skapar en underkategori |
-|---------------------------------------------------|
 |GET: /api/SubCategories/{id} | Hämtar en underkategori via id |
-|--------------------------------------------------------------|
 |PUT: /api/SubCategories/{id} | Ändrar en underkategori via id |
-|--------------------------------------------------------------|
 |DELETE: /api/SubCategories/{id} | Tar bort en underkategori via id |
-|-------------------------------------------------------------------|
 
 ## Funktionalitet
 
